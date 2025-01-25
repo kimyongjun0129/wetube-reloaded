@@ -1,0 +1,27 @@
+{
+  "name": "wetube",
+  "version": "1.0.0",
+  "description": "The best way to watch a vicdeos",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimyongjun0129/wetube-reloaded.git"
+  },
+  "scripts": {
+    "dev": "nodemon -- exec babel-node index.js"
+  },
+  "author": "yongjun",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kimyongjun0129/wetube-reloaded/issues"
+  },
+  "homepage": "https://github.com/kimyongjun0129/wetube-reloaded#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.7",
+    "@babel/node": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "nodemon": "^3.1.9"
+  }
+}
