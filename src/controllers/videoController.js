@@ -1,9 +1,16 @@
 import videoModel from "../models/video.js";
 
-export const home = (req, res) => 
+export const home = async(req, res) => 
 {
-    videoModel.find({});
-    return res.render("home", {pageTitle: "Home", videos:[]});
+    try
+    {
+        const videos = await videoModel.find({});
+        return res.render("home", {pageTitle: "Home", videos});
+    }
+    catch (error)
+    {
+        return res.render("server-error", {error});
+    }
 }
 export const watch = (req, res) => 
 {
@@ -25,8 +32,23 @@ export const getUpload = (req, res) =>
 {
     return res.render("upload", {pageTitle: "Upload Video"});
 }
-export const postUpload = (req, res) =>
+export const postUpload = async (req, res) =>
 {
-    const { title } = req.body;
-    return res.redirect("/");
+    const { title, description, hashtags } = req.body;
+    try
+    {
+        await videoModel.create ({
+            title, // title:title,
+            description, // description:description,
+            hashtags: hashtags.split(",").map(word => `#${word}`),
+        });
+        return res.redirect("/");
+    }
+    catch (error)
+    {
+        return res.render("upload", {
+            pageTitle: "Upload Video",
+            errorMessage: error._message,
+        });
+    }
 }
