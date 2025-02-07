@@ -44,9 +44,7 @@ export const postEdit = async (req, res) =>
     await videoModel.findByIdAndUpdate(id, {
         title,
         description,
-        hashtags: hashtags
-        .split(",")
-        .map((word) => (word.startsWith("#") ? word : `#${word}`)),
+        hashtags: videoModel.formatHashtags(hashtags),
     });
     return res.redirect(`/videos/${id}`);
 };
@@ -64,7 +62,7 @@ export const postUpload = async (req, res) =>
         await videoModel.create ({
             title, // title:title,
             description, // description:description,
-            hashtags: hashtags.split(",").map((word)=> (word.startsWith("#") ? word : `#${word}`)),
+            hashtags: videoModel.formatHashtags(hashtags),
         });
         return res.redirect("/");
     }
@@ -75,4 +73,10 @@ export const postUpload = async (req, res) =>
             errorMessage: error._message,
         });
     }
+}
+
+export const deleteVideo = async(req, res) => {
+    const { id } = req.params;
+    await videoModel.findByIdAndDelete(id);
+    return res.redirect("/");
 }
