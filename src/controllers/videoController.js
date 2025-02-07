@@ -80,3 +80,16 @@ export const deleteVideo = async(req, res) => {
     await videoModel.findByIdAndDelete(id);
     return res.redirect("/");
 }
+
+export const search = async (req, res) => {
+    const { keyword } = req.query;
+    let videos = [];
+    if(keyword) {
+        videos = await videoModel.find({
+            title: {
+                $regex: new RegExp(keyword, "i")    // i : 대소문자 구분 x
+            },
+        });
+    }
+    return res.render("search", {pageTitle: "Search Video", videos});
+}
