@@ -1,6 +1,6 @@
 import express from "express";
 import morgan from "morgan";
-import globalRouter from "./routers/globalRouter.js";
+import globalRouter from "./routers/rootRouter.js";
 import usersRouter from "./routers/userRouter.js";
 import videoRouter from "./routers/videoRouter.js";
 
