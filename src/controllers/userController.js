@@ -44,7 +44,6 @@ export const postLogin = async (req, res) => {
     const { username, password } = req.body;
     const user = await usermodel.findOne({username});
     const pageTitle = "Login";
-    console.log(user)
     if(!user) {
         return res
             .status(400)
@@ -62,7 +61,8 @@ export const postLogin = async (req, res) => {
             errorMessage:"Wrong password",
         })
     }
-    // login~
+    req.session.loggedIn = true;
+    req.session.user = user;
     return res.redirect("/");
 }
 export const edit = (req, res) => res.send("Edit");
