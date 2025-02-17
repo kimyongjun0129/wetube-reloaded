@@ -1,4 +1,4 @@
-import usermodel from "../models/user.js"
+import userModel from "../models/user.js";
 import bcrypt from "bcrypt";
 
 export const getJoin = (req, res) => res.render("join", {pageTitle: "Join"});
@@ -11,22 +11,21 @@ export const postJoin = async (req, res) => {
           errorMessage: "Password confirmation does not match.",
         });
       }
-      const exists = await User.exists({ $or: [{ username }, { email }] });
+      const exists = await userModel.exists({ $or: [{ username }, { email }] });
       if (exists) {
         return res.status(400).render("join", {
           pageTitle,
-          errorMessage: "This username/email is already taken.",
+          errorMessage: "This username or email is already taken.",
         });
       }
     try {
-        await usermodel.create({
+        await userModel.create({
             name,
             username,
             email,
-            password_1,
-            password_2,
+            password:password_1,
             location,
-        })
+        });
         return res.redirect("/login");
     } 
     catch (error)
@@ -42,7 +41,7 @@ export const getLogin = (req, res) => {
 }
 export const postLogin = async (req, res) => {
     const { username, password } = req.body;
-    const user = await usermodel.findOne({username});
+    const user = await userModel.findOne({username, socialOnly:false});
     const pageTitle = "Login";
     if(!user) {
         return res
@@ -52,8 +51,8 @@ export const postLogin = async (req, res) => {
                 errorMessage:"An account with this username does not exists",
             })
     }
-    const match = await bcrypt.compare(password, user.password)
-    if (!match) {
+    const match_password = await bcrypt.compare(password, user.password)
+    if (!match_password) {
         return res
         .status(400)
         .render("login", {
@@ -64,8 +63,83 @@ export const postLogin = async (req, res) => {
     req.session.loggedIn = true;
     req.session.user = user;
     return res.redirect("/");
+};
+
+export const startGithubLogin = (req, res) => {
+    const baseUrl = "https://github.com/login/oauth/authorize";
+    const config = {
+        client_id: process.env.GH_CLIENT,
+        allow_signup: false,
+        scope: "read:user user:email",
+    };
+    const params = new URLSearchParams(config).toString();
+    const finalUrl = `${baseUrl}?${params}`;
+    return res.redirect(finalUrl);
+}
+
+export const finishGithubLogin = async (req, res) => {
+    const baseUrl = "https://github.com/login/oauth/access_token";
+    const config = {
+        client_id: process.env.GH_CLIENT,
+        client_secret: process.env.GH_SECRET,
+        code: req.query.code,
+    }
+    const params = new URLSearchParams(config).toString();
+    const finalUrl = `${baseUrl}?${params}`;
+    const tokenRequest = await (
+        await fetch(finalUrl, {
+        method:"POST",
+        headers: {
+            Accept: "application/json",
+        }
+    })).json();
+    if("access_token" in tokenRequest) {
+        const { access_token } = tokenRequest;
+        const apiUrl = "https://api.github.com";
+        const userData = await(
+            await fetch(`${apiUrl}/user`,{
+            headers: {
+                Authorization: `token ${access_token}`,
+            }
+        })).json();
+        const emailData = await (
+            await fetch(`${apiUrl}/user/emails`, {
+              headers: {
+                Authorization: `token ${access_token}`,
+              },
+            })
+          ).json();
+        const emailObj = emailData.find(
+            (email) => email.primary === true && email.verified === true
+          );
+        if (!emailObj) {
+            return res.redirect("/login");
+        }
+        let user = await userModel.findOne({email: emailObj.email});
+        if(!user) {
+            user = await userModel.create({
+                name:userData.name || "Unknown",
+                avatarUrl:userData.avatarUrl,
+                username:userData.login,
+                email:emailObj.email,
+                password:"",
+                socialOnly:true,
+                location:userData.location,
+            });
+        }
+        req.session.loggedIn = true;
+        req.session.user = user;
+        return res.redirect("/");
+    }
+    else {
+        return res.redirect("/login");
+    }
+}
+
+export const logout = async (req, res) => {
+    req.session.destroy(() => {
+        return res.redirect("/");
+    });
 }
 export const edit = (req, res) => res.send("Edit");
-export const remove = (req, res) => res.send("Remove");
-export const logout = (req, res) => res.send("Logout");
 export const see = (req, res) => res.send("See profile");
