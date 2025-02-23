@@ -5,7 +5,9 @@ export const home = async(req, res) =>
 {
     try
     {
-        const videos = await videoModel.find({});
+        const videos = await videoModel.find({})
+            .sort({ createdAt: "desc"})
+            .populate("owner");
         return res.render("home", {pageTitle: "Home", videos});
     }
     catch (error)
@@ -118,7 +120,7 @@ export const search = async (req, res) => {
             title: {
                 $regex: new RegExp(keyword, "i")    // i : 대소문자 구분 x
             },
-        });
+        }).populate("owner");
     }
     return res.render("search", {pageTitle: "Search Video", videos});
 }
