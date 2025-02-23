@@ -12,7 +12,7 @@ usersRouter.route("/edit")
 .post(avatarUpload.single("avatar"), postEdit)
 usersRouter.get("/github/start", publicOnlyMiddleware, startGithubLogin);
 usersRouter.get("/github/finish", publicOnlyMiddleware, finishGithubLogin);
-usersRouter.get("/:id(\\d+)", see);
 usersRouter.route("/change-password").get(getChangePassword).post(postChangePassword);
+usersRouter.get("/:id", see);
 
 export default usersRouter;
