@@ -1,0 +1,37 @@
+// Config
+@use "./config/_variable.scss" as *;
+@use "./config/_reset.scss" as *;
+
+// Components
+@use "./components/header.scss" as *;
+@use "./components/footer.scss" as *;
+@use "./components/video.scss" as *;
+@use "./components/shared.scss" as *;
+@use "./components/forms.scss" as *;
+@use "./components/social-login.scss" as *;
+
+// Screens
+@use "./screens/search.scss" as *;
+@use "./screens/profile.scss" as *;
+@use "./screens/edit-profile.scss" as *;
+@use "./screens/watch.scss" as *;
+
+
+// Defaults
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: $bg;
+    color:white;
+}
+
+main {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 50px;
+  }
