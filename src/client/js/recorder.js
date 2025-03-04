@@ -30,10 +30,10 @@ const handleDownload = async () => {
     await ffmpeg.load({
         corePath: '/node_modules/@ffmpeg/core/dist/esm/ffmpeg-core.js',
     });
-
+    
     try
     {
-        ffmpeg.writeFile(files.input, await fetchFile(videoFile));
+        await ffmpeg.writeFile(files.input, await fetchFile(videoFile));
         await ffmpeg.exec(["-i", files.input, "-r", "60", files.output]);
         const mp4File = await ffmpeg.readFile(files.output);
         const mp4Blob = new Blob([mp4File.buffer], { type: "video/mp4" });
@@ -41,7 +41,7 @@ const handleDownload = async () => {
 
         downloadFile(mp4Url, "MyRecording.mp4");
 
-        ffmpeg.deleteFile(files.output);
+        await ffmpeg.deleteFile(files.output);
         URL.revokeObjectURL(mp4Url);
     }
     catch (error) {
@@ -58,14 +58,14 @@ const handleDownload = async () => {
 
         downloadFile(thumbUrl, "MyThumbnail.jpg");
 
-        ffmpeg.deleteFile(files.thumb);
+        await ffmpeg.deleteFile(files.thumb);
         URL.revokeObjectURL(thumbFile);
     }
     catch(error) {
         console.log("thumbnail:" + error)
     }
 
-    ffmpeg.deleteFile(files.input);
+    await ffmpeg.deleteFile(files.input);
     URL.revokeObjectURL(videoFile);
 
     actionBtn.disabled = false;
