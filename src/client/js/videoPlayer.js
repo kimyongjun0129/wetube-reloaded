@@ -125,7 +125,10 @@ function handleVideoClick() {
 }
 
 function handleVideoKeyDown(event) {
+    const textarea = document.querySelector("#commentForm textarea") || null;
     if (!(event.code == "Space")) return;
+    if (document.activeElement == textarea) return;
+    event.preventDefault();
     if (video.paused) {
         video.play();
     }
