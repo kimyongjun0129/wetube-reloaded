@@ -36,10 +36,8 @@
     color: black;
     margin-bottom: 10px;
   }
-  .video__comment__delete {
-    cursor: pointer;
-  }
-  .video__comment__modify {
+  .video__comment__delete,
+  .video__comment__edit {
     cursor: pointer;
   }
 }
