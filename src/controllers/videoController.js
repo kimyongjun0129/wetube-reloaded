@@ -192,3 +192,7 @@ export const deleteComment = async (req, res) => {
         return res.sendStatus(404);
     }
 }
+export const editComment = async(req, res) => {
+    const { id } = req.body;
+    return res.sendStatus(201);
+}
