@@ -18,7 +18,6 @@ block content
                     i.fas.fa-volume-up
                 span#fullScreenBtn
                     i.fas.fa-expand
-
     div.video__data
         p.video__title=video.title
         small.video__owner Uploaded by 
@@ -28,21 +27,24 @@ block content
             a(href=`${video.id}/edit`) Edit Video &rarr;
             br
             a(href=`${video.id}/delete`) Delete Video &rarr;
-
-    if loggedIn
-        div.video__add-comments
-            form.video__comment-form#commentForm
-                textarea(cols="30", rows="10", placeholder="Write a nice commment...")
-                button Add Comment
-    div.video__comments
-        ul 
+        if loggedIn
+            div.video__add-comments
+                form.video__comment-form#commentForm
+                    textarea(cols="30", rows="10", placeholder="Write a nice commment...")
+                    button Add Comment
+        div.video__comments
             each comment in video.comments.reverse()
-                li.video__comment(data-Id=comment._id)
-                    i.fas.fa-comment
-                    span  #{comment.text}
-                    if String(comment.owner) == String(loggedInUser._id)
-                        span.video__comment__delete
-                            i.fas.fa-trash
+                div.video__comment(data-Id=comment._id)
+                    div.video__comment__content
+                        i.fas.fa-comment
+                        div=comment.text
+                        if String(comment.owner) == String(loggedInUser._id)
+                            div.video__comment__icons
+                                span.video__comment__delete
+                                    i.fas.fa-trash
+                                span.video__comment__edit
+                                    i.fas.fa-pen
+                    div.video__comment__update
 
 block scripts 
     script(src="/assets/js/videoPlayer.js")
