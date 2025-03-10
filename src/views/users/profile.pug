@@ -3,7 +3,7 @@ extends ../base.pug
 block content 
     div.profile__data
         if user.avatarUrl
-            img(src="/" + user.avatarUrl).avatar
+            img(src=user.avatarUrl).avatar
             span 1Has a conversation. Original line has a conversation.
             h3=user.name
         else
