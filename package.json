@@ -11,7 +11,7 @@
     "dev:assets": "webpack --mode=development --watch",
     "build:server": "babel src -d build --ignore src/client",
     "build:assets": "webpack --mode=production",
-    "build": "npm run build:server && npm run build:aseets",
+    "build": "npm run build:server && npm run build:assets",
     "start": "node build/init.js"
   },
   "author": "yongjun",
