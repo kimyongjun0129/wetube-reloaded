@@ -1,17 +1,18 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { watch } = require("fs");
+
+const BASE_JS = "./src/client/js/"
 
 module.exports = {
     entry: {
-      main:'./src/client/js/main.js',
-      videoPlayer: "./src/client/js/videoPlayer.js"
+      main:`${BASE_JS}main.js`,
+      videoPlayer: `${BASE_JS}videoPlayer.js`,
+      recorder: `${BASE_JS}recorder.js`,
+      commentSection: `${BASE_JS}commentSection.js`,
     },
-    mode: 'development',
-    watch: true,
-    plugins: [new MiniCssExtractPlugin({
-      filename: "css/styles.css",
-    })],
+    plugins: [
+      new MiniCssExtractPlugin({filename: "css/styles.css",})
+    ],
     output: {
         filename:"js/[name].js",
         path: path.resolve(__dirname, "assets"),
@@ -32,7 +33,11 @@ module.exports = {
             test: /\.scss$/,
             use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
           }
-
         ],
     },
+    ignoreWarnings: [
+      {
+        message: /Critical dependency: the request of a dependency is an expression/,
+      },
+    ],
 }

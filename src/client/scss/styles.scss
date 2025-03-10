@@ -9,12 +9,15 @@
 @use "./components/shared.scss" as *;
 @use "./components/forms.scss" as *;
 @use "./components/social-login.scss" as *;
+@use "./components/video-player.scss" as *;
+
 
 // Screens
 @use "./screens/search.scss" as *;
 @use "./screens/profile.scss" as *;
 @use "./screens/edit-profile.scss" as *;
 @use "./screens/watch.scss" as *;
+@use "./screens/upload.scss" as *;
 
 
 // Defaults
@@ -34,4 +37,41 @@ main {
     width: 100%;
     margin: 0 auto;
     margin-top: 50px;
-  }
+}
+
+@keyframes goAway {
+    from {
+        transform: none;
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+}
+
+.message {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    max-width: 200px;
+    padding: 10px 20px;
+    border-radius:  10000px;
+    text-align: center;
+    animation: goAway .5s ease-in-out forwards;
+    animation-delay: 5s;
+    &.error {
+        background-color: tomato;
+        color: white;
+    }
+    &.info {
+        background-color: tomato;
+        color: white;
+    }
+    &.success {
+        background-color: tomato;
+        color: white;
+    }
+}

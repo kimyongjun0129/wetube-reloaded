@@ -125,7 +125,10 @@ function handleVideoClick() {
 }
 
 function handleVideoKeyDown(event) {
+    const textarea = document.querySelector("#commentForm textarea") || null;
     if (!(event.code == "Space")) return;
+    if (document.activeElement == textarea) return;
+    event.preventDefault();
     if (video.paused) {
         video.play();
     }
@@ -146,7 +149,7 @@ const handleEnded = () => {
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMuteClick);
 volumeRange.addEventListener("input", handleVolumeChange);
-video.addEventListener("loadeddata", handleLoadedMetadata);
+video.addEventListener("loadedmetadata", handleLoadedMetadata);
 video.addEventListener("timeupdate", handleTimeUpdate);
 video.addEventListener("click", handlePlayClick);
 video.addEventListener("ended", handleEnded);

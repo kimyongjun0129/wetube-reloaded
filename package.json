@@ -6,10 +6,13 @@
     "type": "git",
     "url": "git+https://github.com/kimyongjun0129/wetube-reloaded.git"
   },
-  "type": "module",
   "scripts": {
     "dev:server": "nodemon",
-    "dev:assets": "webpack"
+    "dev:assets": "webpack --mode=development --watch",
+    "build:server": "babel src -d build --ignore src/client",
+    "build:assets": "webpack --mode=production",
+    "build": "npm run build:server && npm run build:assets",
+    "start": "node build/init.js"
   },
   "author": "yongjun",
   "license": "MIT",
@@ -18,21 +21,29 @@
   },
   "homepage": "https://github.com/kimyongjun0129/wetube-reloaded#readme",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.577.0",
+    "@ffmpeg/core": "^0.12.10",
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-flash": "^0.0.2",
     "express-session": "^1.18.1",
     "mongoose": "^8.9.6",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "multer-s3": "^3.0.1",
     "pug": "^3.0.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.24.5",
     "@babel/core": "^7.26.7",
     "@babel/node": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@types/node": "^22.13.4",
+    "@flydotio/dockerfile": "^0.5.7",
     "babel-loader": "^9.2.1",
     "css-loader": "^7.1.2",
     "mini-css-extract-plugin": "^2.9.2",
