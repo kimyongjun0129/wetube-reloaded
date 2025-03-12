@@ -111,9 +111,18 @@ export const deleteVideo = async(req, res) => {
     if(String(video.owner._id) != String(_id)) {
         return res.status(403).redirect("/");
     }
+    await userModel.updateOne(
+        { videos: id }, 
+        { $pull: { videos: id } }
+      );
+
+    await commentModel.deleteMany({ _id: { $in: video.comments} });
+    await userModel.updateMany(
+        { comments: { $in: video.comments } },
+        { $pull: { comments: { $in: video.comments } }}
+    );
+
     await videoModel.findByIdAndDelete(id);
-    user.videos = user.videos.filter(video_id => video_id != id);
-    await user.save();
     return res.redirect("/");
 }
 
@@ -123,7 +132,7 @@ export const search = async (req, res) => {
     if(keyword) {
         videos = await videoModel.find({
             title: {
-                $regex: new RegExp(keyword, "i")    // i : 대소문자 구분 x
+                $regex: new RegExp(keyword, "i")
             },
         }).populate("owner");
     }
@@ -150,7 +159,6 @@ export const createComment = async (req, res) => {
 
     const video = await videoModel.findById(id);
     if(!video) {
-        req.flash("error", "Video not found");
         return res.sendstatus(404);
     }
     const comment = await commentModel.create({
@@ -173,7 +181,6 @@ export const deleteComment = async (req, res) => {
     const video = await videoModel.findById(comment.video._id);
     const user = await userModel.findById(_id);
     if(!comment) {
-        req.flash("error", "Comment not found");
         return res.sendStatus(404);
     }
     if(String(comment.owner._id) != String(_id)) {
@@ -188,11 +195,20 @@ export const deleteComment = async (req, res) => {
         return res.sendStatus(201);
     }
     catch (error) {
-        res.flash("error", "Cannot found comment");
         return res.sendStatus(404);
     }
 }
 export const editComment = async(req, res) => {
-    const { id } = req.body;
+    const { id, textareaValue } = req.body;
+    const { user: {_id}} = req.session;
+    const comment = await commentModel.findById(id);    
+    if (!comment) {
+        return res.sendStatus(404);
+    }
+    if(String(_id) != String(comment.owner)) {
+        return res.sendStatus(404);
+    }
+    comment.text = textareaValue;
+    comment.save();
     return res.sendStatus(201);
 }
