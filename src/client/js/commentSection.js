@@ -101,6 +101,7 @@ const handleCommentUpdateClick = async (event) => {
   if (event.target.tagName == "BUTTON") {
     const parent = event.target.closest(".video__comment");
     const element = parent.querySelector(".video__comment__content");
+    const textareaValue = element.querySelector(".video__comment__edit-form textarea").value;
     const id = parent.dataset.id;
     if(!parent) return;
     
@@ -109,7 +110,7 @@ const handleCommentUpdateClick = async (event) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({ id, textareaValue }),
     });
     if(response.status == 201) {
       const editForm = parent.querySelector(".video__comment__edit-form");
@@ -121,7 +122,6 @@ const handleCommentUpdateClick = async (event) => {
       icons.before(editTextarea);
       element.removeChild(editForm);
       updateDiv.removeChild(updateDiv.querySelector("button"));
-      console.log(201);
     }
   }
 }
