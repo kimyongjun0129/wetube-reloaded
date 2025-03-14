@@ -3,3 +3,7 @@
 /uploads
 /assets
 /build
+.dockerignore
+Dockerfile
+fly.toml
+fly-deploy.yml
