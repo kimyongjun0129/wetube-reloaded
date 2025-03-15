@@ -124,7 +124,7 @@ function handleVideoClick() {
     playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
 }
 
-function handleVideoKeyDown(event) {
+async function handleVideoKeyDown(event) {
     const textareas = document.querySelectorAll("textarea");
     if (textareas.length == 0) return;  
     for (let textarea of textareas) {
@@ -135,7 +135,7 @@ function handleVideoKeyDown(event) {
     if (!(event.code == "Space")) return;
     event.preventDefault();
     if (video.paused) {
-        video.play();
+        await video.play();
     }
     else {
         video.pause();
