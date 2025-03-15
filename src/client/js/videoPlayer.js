@@ -125,9 +125,14 @@ function handleVideoClick() {
 }
 
 function handleVideoKeyDown(event) {
-    const textarea = document.querySelector("#commentForm textarea") || null;
+    const textareas = document.querySelectorAll("textarea");
+    if (textareas.length == 0) return;  
+    for (let textarea of textareas) {
+        if (document.activeElement === textarea) {
+            return ;
+        }
+    }
     if (!(event.code == "Space")) return;
-    if (document.activeElement == textarea) return;
     event.preventDefault();
     if (video.paused) {
         video.play();
