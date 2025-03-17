@@ -156,7 +156,6 @@ export const createComment = async (req, res) => {
         body : { text },
         session : { user },
     } = req;
-
     const video = await videoModel.findById(id);
     if(!video) {
         return res.sendstatus(404);
