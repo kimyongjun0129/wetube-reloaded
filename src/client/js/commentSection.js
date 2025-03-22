@@ -8,19 +8,21 @@ const editBtn = document.querySelectorAll(".video__comment__edit");
 
 let textareaOpened = false;
 
-const addComment = (text, id) => {
+const addComment = (text, id, name) => {
   const newComment = document.createElement("div");
   newComment.className = "video__comment";
   newComment.dataset.id = id;
 
   const contentDiv = document.createElement("div");
   contentDiv.className = "video__comment__content";
-  
-  const icon = document.createElement("i");
-  icon.className = "fas fa-comment";
+
+  const username = document.createElement("div");
+  username.className = "comment-username";
+  username.innerText = name;
 
   const textDiv = document.createElement("div");
-  textDiv.innerText = ` ${text}`;
+  textDiv.className = "comment-box"
+  textDiv.innerText = text;
 
   const iconsDiv = document.createElement("div");
   iconsDiv.className = "video__comment__icons";
@@ -38,7 +40,7 @@ const addComment = (text, id) => {
   const updateDiv = document.createElement("div");
   updateDiv.className = "video__comment__update";
 
-  contentDiv.appendChild(icon);
+  contentDiv.appendChild(username);
   contentDiv.appendChild(textDiv);
   contentDiv.appendChild(iconsDiv);
   iconsDiv.appendChild(deleteSpan);
@@ -67,8 +69,8 @@ const handleCommentSubmit = async (event) => {
   });
   if(response.status == 201) {
     textarea.value = "";
-    const { newCommentId } = await response.json();
-    addComment(text, newCommentId);
+    const { newCommentId, username } = await response.json();
+    addComment(text, newCommentId, username);
   }
 }
 
@@ -101,7 +103,7 @@ const handleCommentUpdateClick = async (event) => {
   if (event.target.tagName == "BUTTON") {
     const parent = event.target.closest(".video__comment");
     const element = parent.querySelector(".video__comment__content");
-    const textareaValue = element.querySelector(".video__comment__edit-form textarea").value;
+    const textareaValue = element.querySelector("textarea").value;
     const id = parent.dataset.id;
     if(!parent) return;
     
@@ -113,14 +115,15 @@ const handleCommentUpdateClick = async (event) => {
       body: JSON.stringify({ id, textareaValue }),
     });
     if(response.status == 201) {
-      const editForm = parent.querySelector(".video__comment__edit-form");
+      const textarea = element.querySelector("textarea");
       const updateDiv = parent.querySelector(".video__comment__update");
-      const editTextarea = document.createElement("div");
       const icons =  element.querySelector(".video__comment__icons");
-      editTextarea.innerText = `${editForm.querySelector("textarea").value}`;
+      const text = document.createElement("div");
+      text.className = "comment-box";
+      text.innerText = textarea.value;
       
-      icons.before(editTextarea);
-      element.removeChild(editForm);
+      icons.before(text);
+      element.removeChild(textarea);
       updateDiv.removeChild(updateDiv.querySelector("button"));
     }
   }
@@ -129,38 +132,36 @@ const handleCommentUpdateClick = async (event) => {
 const handleCommentEditClick = (event) => {
   event.preventDefault();
   const parent = event.target.closest(".video__comment");
-  const element = parent.querySelector(".video__comment__content");
-  const icons =  element.querySelector(".video__comment__icons");
+  const content = parent.querySelector(".video__comment__content");
+  const icons =  content.querySelector(".video__comment__icons");
   textareaOpened = !textareaOpened;
   if (textareaOpened) {
-    const commentText = element.querySelector("div");
-    const editForm = document.createElement("form");
+    const commentText = content.querySelector(".comment-box");
     const editTextarea = document.createElement("textarea");
-    editForm.className = "video__comment__edit-form";
     editTextarea.cols = "20";
     editTextarea.rows = "5";
-    editTextarea.value = commentText.textContent;
+    editTextarea.value = commentText.innerText;
 
     const updateDiv = parent.querySelector(".video__comment__update");
     const updateBtn = document.createElement("button");
     updateBtn.innerText = "Update";
 
-    element.removeChild(commentText);
-    editForm.appendChild(editTextarea);
-    icons.before(editForm);
-    element.after(updateDiv);
+    content.removeChild(commentText);
+    icons.before(editTextarea);
+    content.after(updateDiv);
     updateDiv.appendChild(updateBtn);
 
     updateBtn.addEventListener("click", handleCommentUpdateClick);
   }
   else {
-    const editForm = parent.querySelector(".video__comment__edit-form");
     const updateDiv = parent.querySelector(".video__comment__update");
-    const textDiv = document.createElement("div");
-    textDiv.innerText = `${editForm.querySelector("textarea").value}`;
+    const textarea = content.querySelector("textarea");
+    const commentBox = document.createElement("div");
+    commentBox.className = "comment-box";
+    commentBox.innerText = textarea.value;
     
-    icons.before(textDiv);
-    element.removeChild(editForm);
+    icons.before(commentBox);
+    content.removeChild(textarea);
     updateDiv.removeChild(updateDiv.querySelector("button"));
   }
 }
