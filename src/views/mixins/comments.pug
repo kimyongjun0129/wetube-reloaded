@@ -1,9 +1,0 @@
-mixin comments(comments)
-    div.comment
-        each comment in comments
-            if (comment == "\n")
-                br
-            else if (comment == " ")
-                != '&nbsp;'
-            else    
-                =comment
