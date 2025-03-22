@@ -36,9 +36,11 @@
     color: black;
     margin-bottom: 10px;
   }
+  .comment-box {
+    white-space: pre-wrap;
+  }
   .video__comment__delete,
   .video__comment__edit {
     cursor: pointer;
   }
 }
-
