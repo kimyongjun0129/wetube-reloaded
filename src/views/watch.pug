@@ -36,8 +36,8 @@ block content
             each comment in video.comments.reverse()
                 div.video__comment(data-Id=comment._id)
                     div.video__comment__content
-                        i.fas.fa-comment
-                        div=comment.text
+                        div.comment-username=comment.ownerName
+                        div.comment-box=comment.text
                         if String(comment.owner) == String(loggedInUser._id)
                             div.video__comment__icons
                                 span.video__comment__delete
